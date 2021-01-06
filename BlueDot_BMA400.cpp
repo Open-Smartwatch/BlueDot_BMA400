@@ -6,6 +6,7 @@
 
 #include "BlueDot_BMA400.h"
 #include "Wire.h"
+#include "bma400_defs.h"
 
 BlueDot_BMA400::BlueDot_BMA400() {
   parameter.I2CAddress;
@@ -67,6 +68,23 @@ void BlueDot_BMA400::setOversamplingRate(void) {
   writeByte(BMA400_ACC_CONFIG1, reg);
 }
 //##########################################################################
+void BlueDot_BMA400::enableStepCounter(void) {
+  uint8_t conf_1 = readByte(BMA400_REG_INT_CONF_1);
+  conf_1 = conf_1 | 0b00000001;  // enable step int
+  writeByte(BMA400_REG_INT_CONF_1, conf_1);
+
+  // uint8_t int12_map = readByte(BMA400_REG_INT_MAP12);
+  // // enable step_int2
+  // int12_map = (int12_map & 0b01100110) | 0b00010000;  // 0b10000001;
+  // writeByte(BMA400_REG_INT_MAP12, int12_map);
+}
+//##########################################################################
+void BlueDot_BMA400::disableStepCounter(void) {
+  uint8_t conf_1 = readByte(BMA400_REG_INT_CONF_1);
+  conf_1 = conf_1 & 0b11111110;  // disable step int
+  writeByte(BMA400_REG_INT_CONF_1, conf_1);
+}
+//##########################################################################
 uint8_t BlueDot_BMA400::readPowerMode(void) {
   uint8_t value;
   value = readByte(BMA400_STATUS);
@@ -101,6 +119,17 @@ uint8_t BlueDot_BMA400::readOversamplingRate(void) {
 
   return value;
 }
+//##########################################################################
+uint32_t BlueDot_BMA400::readStepCount(void) {
+  // this is not optimal performance-wise, but we don't call this that often
+  uint32_t bytes_7_0 = readByte(BMA400_REG_STEP_CNT_0);
+  uint32_t bytes_15_8 = readByte(BMA400_REG_STEP_CNT_1);
+  uint32_t bytes_23_16 = readByte(BMA400_REG_STEP_CNT_2);
+
+  return (bytes_23_16 << 16) | (bytes_15_8 << 8) | bytes_7_0;
+}
+//##########################################################################
+uint8_t BlueDot_BMA400::readActivityMode(void) { return 0b00000011 & readByte(BMA400_REG_STEP_STAT); }
 //##########################################################################
 // DATA READ FUNCTIONS
 //##########################################################################

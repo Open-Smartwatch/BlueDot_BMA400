@@ -56,11 +56,15 @@ class BlueDot_BMA400 {
   void setMeasurementRange();
   void setOutputDataRate();
   void setOversamplingRate();
+  void enableStepCounter();
+  void disableStepCounter();
 
   uint8_t readPowerMode();
   uint8_t readMeasurementRange();
   uint8_t readOutputDataRate();
   uint8_t readOversamplingRate();
+  uint32_t readStepCount();
+  uint8_t readActivityMode();
 
   void readData();
   void convertData();
