@@ -9,7 +9,7 @@
 #include "SPI.h"
 #include "Wire.h"
 
-#define BMA400_CHIP_ID 0x00
+#define BMA400_CHIP_ID_ADDR 0x00
 
 enum Coefficients {
   BMA400_STATUS = 0x03,

@@ -28,7 +28,7 @@ uint8_t BlueDot_BMA400::init(void) {
 //##########################################################################
 uint8_t BlueDot_BMA400::checkID(void) {
   uint8_t chipID;
-  chipID = readByte(BMA400_CHIP_ID);
+  chipID = readByte(BMA400_CHIP_ID_ADDR);
   return chipID;
 }
 //##########################################################################
